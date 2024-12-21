@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idle Factory Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+    button { padding: 10px 20px; margin: 10px; font-size: 16px; }
+    .stats { margin-top: 20px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Idle Factory</h1>
+  <p>Produce widgets and grow your factory!</p>
+
+  <button id="produce">Produce Widget</button>
+  <button id="buyUpgrade">Buy Upgrade (Cost: <span id="upgradeCost">10</span> Gold)</button>
+  <button id="buyAuto">Buy Automation (Cost: <span id="autoCost">50</span> Gold)</button>
+
+  <div class="stats">
+    <p>Widgets: <span id="widgets">0</span></p>
+    <p>Gold: <span id="gold">0</span></p>
+    <p>Widgets per Click: <span id="widgetRate">1</span></p>
+    <p>Widgets per Second: <span id="autoRate">0</span></p>
+  </div>
+
+  <script>
+    let widgets = 0;
+    let gold = 0;
+    let widgetRate = 1;
+    let autoRate = 0;
+    let upgradeCost = 10;
+    let autoCost = 50;
+
+    const widgetDisplay = document.getElementById('widgets');
+    const goldDisplay = document.getElementById('gold');
+    const widgetRateDisplay = document.getElementById('widgetRate');
+    const autoRateDisplay = document.getElementById('autoRate');
+    const upgradeCostDisplay = document.getElementById('upgradeCost');
+    const autoCostDisplay = document.getElementById('autoCost');
+
+    document.getElementById('produce').addEventListener('click', () => {
+      widgets += widgetRate;
+      updateDisplay();
+    });
+
+    document.getElementById('buyUpgrade').addEventListener('click', () => {
+      if (gold >= upgradeCost) {
+        gold -= upgradeCost;
+        widgetRate++;
+        upgradeCost = Math.ceil(upgradeCost * 1.5);
+        updateDisplay();
+      }
+    });
+
+    document.getElementById('buyAuto').addEventListener('click', () => {
+      if (gold >= autoCost) {
+        gold -= autoCost;
+        autoRate++;
+        autoCost = Math.ceil(autoCost * 2);
+        updateDisplay();
+      }
+    });
+
+    function updateDisplay() {
+      widgetDisplay.textContent = widgets;
+      goldDisplay.textContent = gold;
+      widgetRateDisplay.textContent = widgetRate;
+      autoRateDisplay.textContent = autoRate;
+      upgradeCostDisplay.textContent = upgradeCost;
+      autoCostDisplay.textContent = autoCost;
+    }
+
+    setInterval(() => {
+      widgets += autoRate;
+      gold += Math.floor(widgets / 10);
+      widgets %= 10; // Widgets are converted to gold in batches of 10
+      updateDisplay();
+    }, 1000);
+  </script>
+</body>
+</html>
